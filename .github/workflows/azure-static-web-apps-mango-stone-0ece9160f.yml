@@ -28,10 +28,9 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "./Lexy/frontend" # App source code path
-          api_location: "./output/server"
-          output_location: "./output/public" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: "./Lexy/frontend"
+          api_location: "" # Remove if not using API
+          output_location: ".nuxt/dist" # Update to match Nuxt.js output
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
