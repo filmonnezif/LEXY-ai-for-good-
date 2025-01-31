@@ -1,7 +1,7 @@
 # Lexy: AI-Powered Reading Companion 🚀
 
 [![Lexy Demo](demo-thumbnail-url)](video-url)
-[Try Lexy](https://lexy-demo.com)
+[Try Lexy](https://wonderful-island-08b663303.4.azurestaticapps.net/en)
 
 ## 🌟 Overview
 Lexy is AI-powered reading assistant that transforms complex text into accessible, engaging content. Built during Ai for good hackathon, it leverages cutting-edge AI to provide an innovative reading experience.
