@@ -1,0 +1,5 @@
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css');
+
+body {
+  font-family: 'OpenDyslexic', sans-serif;
+}
