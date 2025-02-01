@@ -976,22 +976,40 @@ const setupWordHoverListeners = () => {
       speak(word)
     }
   }, 500)
-
+  
   essayContent.addEventListener('mouseover', (e) => {
+    if (focusMode.value){
     const wordContainer = e.target.closest('.word-container')
     if (wordContainer) {
       const word = wordContainer.dataset.word
       debouncedSpeak(word)
     }
-  })
+    }
+    else {
+      const wordContainer = e.target.closest('[data-word]')
+      if (wordContainer) {
+        const word = wordContainer.dataset.word
+        debouncedSpeak(word)
+      }
+    }
+})
 
   essayContent.addEventListener('mouseout', (e) => {
+    if (focusMode.value){
     const wordContainer = e.target.closest('.word-container')
     if (wordContainer) {
       debouncedSpeak.cancel()
       stop()
     }
-  })
+    }
+    else {
+      const wordContainer = e.target.closest('[data-word]')
+      if (wordContainer) {
+        debouncedSpeak.cancel()
+        stop()
+      }
+    }
+})
 }
 
 const highlight = ref(false)
