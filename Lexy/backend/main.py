@@ -9,6 +9,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from test_reading import get_pronunciation_errors
 from document_processer import extract_text_from_document
+from audio_creator import AzureTextToSpeech
+from prompts import word_replacement_prompt, voice_chat_prompt
+from langchain_core.messages import HumanMessage
+from LLM_source import llm , llm_groq
+import json
+import requests
+from typing import Dict
 
 load_dotenv()
 
@@ -150,3 +157,106 @@ async def extract_text(file: UploadFile = File(...)):
     print (extracted_text)
     
     return {"text": extracted_text}
+
+
+class RemixRequest(BaseModel):
+    words: list[str]
+    document: str
+
+@app.post("/remix")
+async def remix_text(remix_request: RemixRequest):
+    formatted_prompt = word_replacement_prompt.format(
+        complex_words=remix_request.words,
+        document=remix_request.document
+    )
+    user_message = HumanMessage(content=formatted_prompt)
+    remix_response = llm.invoke([user_message])
+    remixed_text = remix_response.content
+    
+    return {
+        "remixed_text": remixed_text
+    }
+
+
+AZURE_TRANSLATOR_KEY = os.getenv("AZURE_TRANSLATOR_KEY")
+AZURE_TRANSLATOR_REGION = os.getenv("AZURE_TRANSLATOR_REGION") or "global"
+
+class TranslationRequest(BaseModel):
+    text: str
+
+@app.post("/translate-to-arabic")
+async def translate_to_arabic(translation_request: TranslationRequest):
+    endpoint = "https://api.cognitive.microsofttranslator.com/translate"
+    location = AZURE_TRANSLATOR_REGION
+    
+    params = {
+        'api-version': '3.0',
+        'from': 'en',
+        'to': 'ar'
+    }
+    
+    headers = {
+        'Ocp-Apim-Subscription-Key': AZURE_TRANSLATOR_KEY,
+        'Ocp-Apim-Subscription-Region': location,
+        'Content-type': 'application/json'
+    }
+    
+    body = [{
+        'text': translation_request.text
+    }]
+    
+    response = requests.post(endpoint, params=params, headers=headers, json=body)
+    translation_result = response.json()
+
+    return {
+        "translated_text": translation_result[0]["translations"][0]["text"]
+    }
+
+active_connections: Dict[int, WebSocket] = {}
+
+
+@app.websocket("/ws/audio-chat/{user_id}")
+async def audio_chat_endpoint(websocket: WebSocket, user_id: int):
+    await websocket.accept()
+    active_connections[user_id] = websocket
+    document_context = ""
+    
+    try:
+        while True:
+            message = await websocket.receive_text()
+            data = json.loads(message)
+            
+            if data.get('type') == 'context':
+                document_context = data['content']
+                print ("context received")
+                continue
+                
+            user_message = data.get('message', message)
+            print (user_message)
+            formatted_prompt = voice_chat_prompt.format(
+                context=document_context,
+                user_message=user_message
+            )
+            
+            response = llm_groq.invoke(formatted_prompt)
+            print(response.content)
+            tts = AzureTextToSpeech()
+            ssml_text = f"""<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+                <voice name="en-US-AvaMultilingualNeural">
+                {response.content}
+                </voice>
+                </speak>"""
+            
+            audio_path = "response.wav"
+            tts.create_audio(ssml_text, output_path=audio_path, use_ssml=True)
+            
+            with open(audio_path, "rb") as audio_file:
+                await websocket.send_bytes(audio_file.read())
+            
+            os.remove(audio_path)
+            
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        if user_id in active_connections:
+            del active_connections[user_id]
