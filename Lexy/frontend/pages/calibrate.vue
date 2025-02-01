@@ -3,77 +3,92 @@
     <Dialog :open="showDialog">
       <DialogContent class="bg-purple-50 max-w-3xl dark:bg-gray-900 text-gray-700 dark:text-gray-300">
         <!-- Initial Welcome Content -->
-        <!-- Replace the first two dialog sections with this merged version -->
-<div v-if="showUserInfoDialog" class="max-w-2xl mx-auto space-y-6">
-  <DialogHeader class="space-y-4">
-    <DialogTitle>
-      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Welcome to Lexy</h2>
-    </DialogTitle>
-    <DialogDescription class="text-xl font-medium text-gray-700 dark:text-gray-300">
-      Let's personalize your experience
-    </DialogDescription>
-  </DialogHeader>
+        <div v-if="showUserInfoDialog" class="max-w-2xl mx-auto space-y-6">
+          <DialogHeader class="space-y-4">
+            <DialogTitle >
+              <span class="text-3xl font-bold text-gray-800 dark:text-gray-200">Welcome to Lexy</span>
+            </DialogTitle>
+            <DialogDescription class="text-xl font-medium text-gray-700 dark:text-gray-300">
+              Let's personalize your experience
+            </DialogDescription>
+          </DialogHeader>
 
-  <div class="grid gap-6 py-6">
-    <div class="space-y-2">
-      <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your Name</label>
-      <input 
-        v-model="userInfo.username" 
-        type="text"
-        placeholder="Enter your name"
-        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-              bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
-              transition-all duration-200 outline-none"
-      />
-    </div>
-    <div class="space-y-2">
-      <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your Age</label>
-      <input 
-        v-model="userInfo.age" 
-        type="number"
-        placeholder="Enter your age"
-        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-              bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
-              transition-all duration-200 outline-none"
-      />
-    </div>
-    <div class="space-y-2">
-      <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your School</label>
-      <input 
-        v-model="userInfo.school" 
-        type="text"
-        placeholder="Enter your school"
-        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-              bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
-              transition-all duration-200 outline-none"
-      />
-    </div>
-  </div>
-  <div v-if="isFormComplete" class="space-y-6">
-  <div class="border-t pt-6">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Quick Reading Assessment</h3>
-    <p class="text-gray-700 dark:text-gray-300 mt-2">
-      Take a brief 3-paragraph reading test to help us optimize your experience.
-    </p>
-  </div>
+          <div class="grid gap-6 py-6">
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your Name</label>
+              <input 
+                v-model="userInfo.username" 
+                type="text"
+                placeholder="Enter your name"
+                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
+                      bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
+                      transition-all duration-200 outline-none"
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your Age</label>
+              <input 
+                v-model="userInfo.age" 
+                type="number"
+                placeholder="Enter your age"
+                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
+                      bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
+                      transition-all duration-200 outline-none"
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Your School</label>
+              <input 
+                v-model="userInfo.school" 
+                type="text"
+                placeholder="Enter your school"
+                class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
+                      bg-white dark:bg-gray-800 focus:ring-2 focus:ring-purple-500 
+                      transition-all duration-200 outline-none"
+              />
+            </div>
+          </div>
 
-  <DialogFooter class="flex gap-8">
-    <Button 
-      variant="outline" 
-      class="flex-1 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-200 dark:bg-gray-800 dark:hover:text-gray-400"
-      @click="skipCalibration"
-    >
-      Skip for Now
-    </Button>
-    <Button 
-      class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white shadow-lg dark:hover:bg-purple-500 border-white dark:border-gray-300"
-      @click="startCalibration"
-    >
-      Start Assessment
-    </Button>
-  </DialogFooter>
-</div>
-</div>
+          <DialogFooter class="flex justify-end pt-4">
+            <Button 
+              class="w-full sm:w-auto px-8 py-3 bg-purple-600 hover:bg-purple-700 
+                    text-white font-medium rounded-lg shadow-lg hover:shadow-xl 
+                    transition-all duration-200"
+              @click="submitUserInfo"
+              :disabled="!isFormComplete"
+            >
+              Get Started
+            </Button>
+          </DialogFooter>
+        </div>
+
+        <!-- Calibration Intro -->
+        <div v-else-if="!isCalibrating" class="max-w-2xl mx-auto space-y-8 py-4">
+          <DialogHeader class="space-y-4">
+            <DialogTitle class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+              Quick Reading Assessment
+            </DialogTitle>
+            <DialogDescription class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              Take a brief 3-paragraph reading test to help us optimize your experience.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter class="flex gap-8 pt-8">
+            <Button 
+              variant="outline" 
+              class="flex-1 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-200 dark:bg-gray-800 dark:hover:text-gray-400"
+              @click="skipCalibration"
+            >
+              Skip for Now
+            </Button>
+            <Button 
+              class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white shadow-lg dark:hover:bg-purple-500 border-white dark:border-gray-300"
+              @click="startCalibration"
+            >
+              Start Assessment
+            </Button>
+          </DialogFooter>
+        </div>
 
 
         <!-- Calibration Content -->
@@ -182,7 +197,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { MicrophoneIcon, PlayIcon, PauseIcon, ArrowRightIcon, CheckIcon } from '@heroicons/vue/24/solid'
@@ -199,21 +214,19 @@ const userInfo = ref({
   school: ''
 })
 const userId = ref(null)
-const showReadingTest = ref(false)
 
 const isFormComplete = computed(() => {
-  return userInfo.value.username && 
+  return userInfo.value.username?.trim() && 
          userInfo.value.age && 
-         userInfo.value.school
+         userInfo.value.school?.trim()
 })
 
-
 const submitUserInfo = async () => {
-  const savedUserId = localStorage.getItem('userId')
-  if (savedUserId) {
+  userId.value = localStorage.getItem('userId')
+  if (userId.value) {
     showUserInfoDialog.value = false
     showDialog.value = true
-    return 
+    return
   }
   try {
     const response = await axios.post('https://dyslexai-gvbfgqdkdkg0dwhw.canadacentral-01.azurewebsites.net/demo-signup', {
@@ -264,12 +277,10 @@ let recorder = ref(null)
 let stream = ref(null)
 
 const skipCalibration = () => {
-  submitUserInfo()
   router.push('/home')
 }
 
 const startCalibration = () => {
-  submitUserInfo()
   isCalibrating.value = true
   initializeWordProgress()
 }
@@ -425,6 +436,7 @@ const handleNext = () => {
 
 const handleDone = () => {
   stopRecording()
+  isParaComplete.value = true
   if (currentParagraph.value < 3) {
     currentParagraph.value++
     retryParagraph()
@@ -501,9 +513,16 @@ const startRecording = async () => {
       timeSlice: 1000
     })
 
-    setupSpeechRecognition()
+    // Only setup speech recognition for desktop
+    if (!isMobileDevice()) {
+      setupSpeechRecognition()
+      recognition.value.start()
+    } else {
+      // For mobile, just start recording without speech recognition
+      isRecording.value = true
+    }
+    
     recorder.value.startRecording()
-    recognition.value.start()
     isRecording.value = true
     
   } catch (error) {
