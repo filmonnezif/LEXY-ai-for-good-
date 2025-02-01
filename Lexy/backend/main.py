@@ -8,6 +8,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Float, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from test_reading import get_pronunciation_errors
+from document_processer import extract_text_from_document
 
 load_dotenv()
 
@@ -135,3 +136,17 @@ async def assess_reading(
     
     return result                                                                                     
 
+
+@app.post("/extract-text")
+async def extract_text(file: UploadFile = File(...)):
+    """
+    Endpoint to extract text from uploaded documents
+    """
+    # Read the file content
+    content = await file.read()
+    
+    # Extract text from the document
+    extracted_text = extract_text_from_document(content)
+    print (extracted_text)
+    
+    return {"text": extracted_text}
