@@ -102,35 +102,63 @@
     </Drawer>
     <!-- Left Sidebar-->
     <div class="hidden md:block w-72 shadow-md dark:shadow-gray-400/30 p-4">
-      <!-- Document Analytics Section -->
-      <div class="mb-6 mt-6">
-        <Label class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Document Analytics</Label>
-        <Card class="bg-purple-50/50 dark:bg-gray-800/50 p-4">
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Hard Words</span>
-              <Badge variant="purple" class="bg-purple-100 dark:bg-gray-800 dark:text-purple-400"
-              >{{ hardWordsCount || '0' }}</Badge>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Reading Time</span>
-              <span class="text-sm font-medium dark:text-gray-300">~{{ estimatedReadingTime }} min</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Complexity Score</span>
-              <Badge variant="outline" class="bg-purple-100 dark:bg-gray-800 dark:text-purple-400"
-              >{{ complexityScore || 'N/A' }}</Badge>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <Separator class="my-2" />
+      
 
       <!-- Audio Tools Section -->
-      <div class="mb-6">
-        <Label class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Audio Tools</Label>
+      <div class="space-y-4">
+  <Card class="bg-purple-50/50 dark:bg-gray-800/50 p-6">
+    <div class="flex flex-col items-center space-y-6">
+      <!-- Logo with Status -->
+      <div class="relative">
+        <img 
+          src="https://lexydata.blob.core.windows.net/summary/Lexy.png" 
+          alt="Lexy" 
+          :class="[
+            'w-20 h-20 rounded-full ring-4 ring-purple-400 dark:ring-purple-600 p-1',
+            isSpeaking && 'animate-border'
+          ]"
+        />
+        <div class="absolute -top-2 -mt-2 -right-6 -mr-6">
+          <Badge variant="outline" class="bg-white dark:bg-gray-800">
+            <div class="flex items-center gap-2">
+              <div 
+                class="animate-pulse h-2 w-2 rounded-full" 
+                :class="isListening ? 'bg-green-500' : isSpeaking ? 'bg-blue-500' : isProcessingRequest ? 'bg-yellow-500' : 'bg-gray-500'">
+              </div>
+              <span class="text-xs">
+                {{ isProcessingRequest ? 'Thinking🤔' 
+                   : isSpeaking ? 'Speaking🗣️' 
+                   : isListening ? 'Listening👂' 
+                   : 'Hey👋' }}
+              </span>
+            </div>
+          </Badge>
+        </div>
       </div>
+
+
+      <!-- Dynamic Message -->
+      <p class="text-center text-gray-700 dark:text-gray-300 font-medium">
+        {{ chatHistory.length > 0 ? chatHistory[chatHistory.length - 1].text : 'Ask Lexy anything about your document' }}
+      </p>
+
+      <!-- Action Button -->
+      <Button 
+        @click="isVoiceChatActive ? stopVoiceChat() : startVoiceChat()" 
+        :class="isVoiceChatActive ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700'"
+        class="w-48 text-white transition-all duration-300 transform hover:scale-105"
+      >
+        <div class="flex items-center justify-center gap-2">
+          <MicrophoneIcon v-if="!isVoiceChatActive" class="h-4 w-4" />
+          <StopIcon v-else class="h-4 w-4" />
+          <span>{{ isVoiceChatActive ? 'Stop Chatting' : 'Talk to Lexy' }}</span>
+        </div>
+      </Button>
+    </div>
+  </Card>
+</div>
+
+<Separator class="my-8" />
 
       <!-- Reading Assessment Section -->
 <div class="space-y-4">
@@ -518,8 +546,21 @@
           </CardContent>
         </Card>
       </div>
-    </div>
+      <!-- Document Analytics Section -->
+      <div class="mb-6 mt-6">
+          <div class="flex justify-start">
+            <button 
+              @click="downloadPDF" 
+              class="mx-auto inline-flex items-center px-3 py-1 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-md shadow hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition transform hover:scale-105"
+            >
+              Download as PDF
+            </button>
+          </div>
+      </div>
 
+
+      <Separator class="my-2" />
+    </div>
   </div>
 </template>
 
@@ -538,6 +579,8 @@ import { ReloadIcon } from '@radix-icons/vue'
 import { CursorTextIcon} from '@radix-icons/vue'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import { Loader2Icon } from 'lucide-vue-next'
+import html2pdf from 'html2pdf.js'
+
 
 const chunks = ref([])
 const currentChunkIndex = ref(0)
@@ -928,15 +971,26 @@ const parseErrors = (errors) => {
 
 
 
+const downloadPDF = () => {
+  // Get the DOM element that contains your main content
+  const element = document.getElementById('essay-content')
+  if (!element) return
 
+  // Options for html2pdf - adjust options as needed
+  const opt = {
+    margin:       0.5,
+    filename:     'document.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2,
+      // Optionally include any background or styling capture options here
+    },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  }
 
-
-
-
-
-
-
-
+  // Convert the element to PDF using html2pdf
+  html2pdf().set(opt).from(element).save()
+}
 
 
 
@@ -1221,6 +1275,134 @@ const toggleTranslation = async () => {
 }
 
 
+const isVoiceChatActive = ref(false)
+const chatHistory = ref([])
+const ws = ref(null)
+const currentAudioSource = ref(null)
+
+const isListening = ref(false)
+const isSpeaking = ref(false)
+const isProcessingRequest = ref(false)
+
+const startVoiceChat = async () => {
+  const userId = localStorage.getItem('userId')
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = convertedHtml.value
+  let plainText = tempDiv.textContent || tempDiv.innerText
+  const words = plainText.split(/\s+/)
+  if (words.length > 500) {
+    plainText = words.slice(0, 500).join(' ')
+  }
+
+  ws.value = new WebSocket(`wss://dyslexai-gvbfgqdkdkg0dwhw.canadacentral-01.azurewebsites.net/ws/audio-chat/${userId}`)
+
+  ws.value.onopen = () => {
+    ws.value.send(JSON.stringify({
+      type: 'context',
+      content: plainText
+    }))
+  }
+  
+  ws.value.onmessage = async (event) => {
+    // Pause recognition and recording while processing the response
+    if (recognition.value) {
+      recognition.value.stop()
+      isListening.value = false
+    }
+    
+    if (recorder.value) {
+      recorder.value.pauseRecording()
+    }
+  
+    // Process the audio response
+    isSpeaking.value = true
+    isProcessingRequest.value = false // Reset processing state after response
+  
+    const audioBlob = new Blob([event.data], { type: 'audio/wav' })
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const audioBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer())
+    const source = audioContext.createBufferSource()
+    source.buffer = audioBuffer
+    source.connect(audioContext.destination)
+    
+    // Save the audio source so we can abort the playback if needed:
+    currentAudioSource.value = source
+
+    source.onended = () => {
+      isSpeaking.value = false
+      currentAudioSource.value = null
+
+      // Restart recognition and recording if voice chat is still active:
+      if (isVoiceChatActive.value) {
+        if (recognition.value) {
+          recognition.value.start()
+          isListening.value = true
+        }
+        if (recorder.value) {
+          recorder.value.resumeRecording()
+        }
+      }
+    }
+    
+    source.start()
+  }
+  
+  recognition.value = new webkitSpeechRecognition()
+  recognition.value.continuous = true
+  recognition.value.interimResults = false
+  
+  recognition.value.onresult = (event) => {
+    const transcript = event.results[event.results.length - 1][0].transcript
+    
+    // Only send new request if not processing previous one
+    if (!isProcessingRequest.value) {
+      isProcessingRequest.value = true
+      chatHistory.value.push({ type: 'user', text: transcript })
+      ws.value.send(JSON.stringify({
+        type: 'message',
+        message: transcript
+      }))
+    }
+  }
+  
+  isVoiceChatActive.value = true
+  recognition.value.start()
+  isListening.value = true
+}
+
+const stopVoiceChat = () => {
+  if (ws.value) {
+    ws.value.close()
+    ws.value = null
+  }
+  
+  if (recognition.value) {
+    recognition.value.stop()
+    isListening.value = false
+  }
+  
+  if (recorder.value) {
+    recorder.value.stopRecording()
+    recorder.value = null
+  }
+  
+  if (stream.value) {
+    stream.value.getTracks().forEach(track => track.stop())
+    stream.value = null
+  }
+
+  // Abort any ongoing audio playback:
+  if (currentAudioSource.value) {
+    currentAudioSource.value.stop()
+    currentAudioSource.value = null
+  }
+  
+  isVoiceChatActive.value = false
+  isSpeaking.value = false
+  chatHistory.value = []
+}
+
+
 const handleEscKey = (event) => {
   if (event.key === 'Escape' && focusMode.value) {
     focusMode.value = false
@@ -1411,5 +1593,21 @@ span {
     right: 20px;
     transform: none;
   }
+}
+
+@keyframes borderPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59,130,246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(59,130,246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59,130,246, 0);
+  }
+}
+
+.animate-border {
+  animation: borderPulse 1.5s infinite;
 }
 </style>

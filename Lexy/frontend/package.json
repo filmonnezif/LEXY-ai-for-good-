@@ -29,6 +29,7 @@
     "embla-carousel-vue": "^8.5.2",
     "heroicons": "^2.2.0",
     "howler": "^2.2.4",
+    "html2pdf.js": "^0.10.2",
     "lodash-es": "^4.17.21",
     "lucide-vue-next": "^0.468.0",
     "nuxt": "^3.14.1592",

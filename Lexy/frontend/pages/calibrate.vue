@@ -222,12 +222,12 @@ const isFormComplete = computed(() => {
 })
 
 const submitUserInfo = async () => {
-  userId.value = localStorage.getItem('userId')
-  if (userId.value) {
+  //userId.value = localStorage.getItem('userId')
+  /*if (userId.value) {
     showUserInfoDialog.value = false
     showDialog.value = true
     return
-  }
+  }*/
   try {
     const response = await axios.post('https://dyslexai-gvbfgqdkdkg0dwhw.canadacentral-01.azurewebsites.net/demo-signup', {
       username: userInfo.value.username,

@@ -40,8 +40,9 @@
 import { useColorMode } from '#imports'
 import { SunIcon, MoonIcon } from '@radix-icons/vue'
 
-const colorMode = useColorMode()
-
+const colorMode = useColorMode({
+  default: 'light'
+})
 const toggleTheme = () => {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
