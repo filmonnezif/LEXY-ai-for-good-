@@ -1,11 +1,9 @@
 # Lexy: AI Reading Companion for Dyslexic Students
-# Slush'D AI Hackathon 2025
+## Slush'D AI Hackathon 2025
 
 ## Live Demo
 **[Experience Lexy Now!](https://wonderful-island-08b663303.4.azurestaticapps.net/en)**
 
-## Demo Video
-[Watch the Demo Video](#)
 
 ## Overview
 Lexy is an innovative AI-powered reading companion crafted specifically to support dyslexic students. By leveraging advanced artificial intelligence alongside additional tailored features, Lexy transforms dense, challenging text into accessible, engaging content. This tool not only simplifies reading but also enriches the overall learning experience through interactive strategies such as real-time document conversation and document remixing.
