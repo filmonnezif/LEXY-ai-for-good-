@@ -21,7 +21,7 @@ llm = AzureChatOpenAI(
 )
 
 # Groq configuration
-groq_api_key="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"
+groq_api_key = os.getenv("GROQ_API_KEY")
 
 llm_groq = ChatGroq(
     groq_api_key=groq_api_key,

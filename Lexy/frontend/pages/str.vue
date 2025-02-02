@@ -548,15 +548,19 @@
       </div>
       <!-- Document Analytics Section -->
       <div class="mb-6 mt-6">
+          <p class="mb-2 text-sm text-gray-600 dark:text-gray-300">
+            Edit and customize your document then download as pdf
+          </p>
           <div class="flex justify-start">
             <button 
               @click="downloadPDF" 
               class="mx-auto inline-flex items-center px-3 py-1 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-md shadow hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition transform hover:scale-105"
             >
-              Download as PDF
+              Download
             </button>
           </div>
       </div>
+
 
 
       <Separator class="my-2" />
