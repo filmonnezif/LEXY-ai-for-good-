@@ -6,7 +6,7 @@
 
 
 ## Overview
-Lexy is an innovative AI-powered reading companion crafted specifically to support dyslexic students. By leveraging advanced artificial intelligence alongside additional tailored features, Lexy transforms dense, challenging text into accessible, engaging content. This tool not only simplifies reading but also enriches the overall learning experience through interactive strategies such as real-time document conversation and document remixing.
+Lexy is an innovative AI-powered reading companion designed to support dyslexic students. By utilizing advanced artificial intelligence and additional tailored features, Lexy transforms dense, challenging text into accessible, engaging content. This tool simplifies reading and enriches the overall learning experience through interactive strategies such as real-time document conversation and document remixing.
 
 ## Features
 - Comprehensive reading assessment with personalized text modifications
