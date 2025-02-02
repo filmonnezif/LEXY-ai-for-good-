@@ -560,9 +560,6 @@
             </button>
           </div>
       </div>
-
-
-
       <Separator class="my-2" />
     </div>
   </div>
@@ -574,7 +571,6 @@ import axios from 'axios'
 import { BookOpenIcon, MegaphoneIcon } from '@heroicons/vue/24/outline'
 import { useTextProcessor } from '~/composables/useTextProcessor'
 import { useTextToSpeech } from '~/composables/useTextToSpeech'
-import Audio from '~/components/ui/audio/Audio.vue'
 import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
 import { Pencil2Icon, SpeakerLoudIcon } from '@radix-icons/vue'
@@ -709,11 +705,6 @@ const hasCommonCharacters = (word, buffer) => {
   const firstThreeChars = normalizedWord.substring(0, 3)
   return recentBuffer.includes(firstThreeChars)
 }
-
-const isWordRead = (word, index) => {
-  return index <= currentPosition.value && wordProgress.value[index].isRead
-}
-
 
 const startRecording = async () => {
   try {
@@ -872,26 +863,6 @@ const handlePlayPause = () => {
   }
 }
 
-
-// 3. Add chunk navigation
-const handleNextChunk = () => {
-  if (currentChunkIndex.value < chunks.value.length - 1) {
-    currentChunkIndex.value++
-    resetChunkProgress()
-  } else {
-    finishReading()
-  }
-}
-
-const hardWordsCount = computed(() => recentErrors.value.length)
-const estimatedReadingTime = computed(() => {
-  const wordCount = convertedHtml.value.split(' ').length
-  return Math.ceil(wordCount / 100) // Assuming 200 words per minute
-})
-const complexityScore = computed(() => {
-  // Implement complexity calculation based on sentence length, word difficulty etc.
-  return 'Medium'
-})
 const hasAssessmentResults = computed(() => recentWpm.value > 0)
 const isImproving = computed(() => {
   // Compare with previous assessments
@@ -921,10 +892,6 @@ const retryChunk = () => {
   startCountdown()
 }
 
-const finishReading = () => {
-  // Handle completion of all chunks
-  alert('Reading assessment complete!')
-}
 const showAssessment = ref(false)
 const isProcessing = ref(false)
 
@@ -973,8 +940,6 @@ const parseErrors = (errors) => {
   return errors.map(error => error.word.toLowerCase())
 }
 
-
-
 const downloadPDF = () => {
   // Get the DOM element that contains your main content
   const element = document.getElementById('essay-content')
@@ -996,34 +961,11 @@ const downloadPDF = () => {
   html2pdf().set(opt).from(element).save()
 }
 
-
-
-const isSummarizing = ref(false)
-const summaryAudio = ref(null)
-
 const leftSheetOpen = ref(false)
 const rightSheetOpen = ref(false)
 
-const summarizeText = async () => {
-  isSummarizing.value = true
-  try {
-    const response = await axios.post('https://dyslexai-gvbfgqdkdkg0dwhw.canadacentral-01.azurewebsites.net/summarize-text-audio', {
-      text: convertedHtml.value
-    })
-    
-    // Set the audio source directly from the URL
-    summaryAudio.value = response.data.audio_url
-    
-  } catch (error) {
-    console.error('Error getting summary audio:', error)
-  } finally {
-    isSummarizing.value = false
-  }
-}
-
 const readAlong = ref(false)
 const { speak, stop } = useTextToSpeech()
-const hoverTimer = ref(null)
 
 const setupWordHoverListeners = () => {
   const essayContent = document.getElementById('essay-content')
@@ -1109,7 +1051,6 @@ const applyFocusModeBolding = (content) => {
   }).join('')
 }
 
-
 const title = ref(route.query.fileName || 'Dyslexia')
 const convertedHtml = ref(route.query.text || `<h1>Understanding Dyslexia</h1><p>Dyslexia is a neurological condition that affects an individual’s ability to read, write, and spell, despite normal intelligence and adequate educational opportunities. This condition is classified as a specific learning disorder and is often characterized by difficulties in phonological processing, which refers to the ability to break down and manipulate the sounds in language.</p><p>The etiology of dyslexia involves a confluence of genetic and environmental factors, often implicating atypical neural activation in regions such as the left temporal lobe. Neuroimaging studies reveal that individuals with dyslexia exhibit diminished connectivity in areas responsible for decoding orthographic symbols and mapping them to corresponding phonemes. Despite these challenges, dyslexia does not correlate with cognitive deficits; many individuals with this condition demonstrate exceptional creativity and problem-solving abilities.</p><p>Intervention strategies for dyslexia often involve structured literacy programs that employ multisensory techniques. These methodologies integrate visual, auditory, and kinesthetic modalities to reinforce neural pathways, facilitating more effective acquisition of reading skills. Moreover, assistive technologies such as text-to-speech software and immersive readers can significantly ameliorate the challenges faced by dyslexic individuals, enabling them to access information and improve comprehension.</p><p> Public awareness and accommodations are essential to ensure equitable educational experiences for individuals with dyslexia. By fostering an inclusive environment and leveraging innovative pedagogical tools, society can mitigate the stigmatization often associated with this condition and empower those affected to achieve their full potential.</p>`)
 const displayContent = computed(() => {
@@ -1142,8 +1083,6 @@ const displayContent = computed(() => {
 
   return `<div class="${isArabic.value ? 'rtl-content' : ''}">${processedContent}</div>`
 })
-
-
 
 // a watcher to watch the highlight mode and update the displayContent accordingly
 watch(highlight, (newValue) => {
@@ -1277,7 +1216,6 @@ const toggleTranslation = async () => {
     console.error('Translation error:', error)
   }
 }
-
 
 const isVoiceChatActive = ref(false)
 const chatHistory = ref([])
@@ -1569,33 +1507,12 @@ span {
     padding-right: 0.5rem;
     padding-bottom: 0.5rem;
   }
-  .pagination-container {
-    bottom: 20px;
-    left: 20px;
-    right: 80px;
-    transform: none;
-    display: flex;
-    justify-content: flex-start;
-    max-width: calc(100% - 100px);
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none; 
-  }
-
-  .pagination-container::-webkit-scrollbar {
-    display: none;
-  }
-  .pagination-container button {
-    min-width: 32px;
-    padding: 0;
-  }
-
   .exit-focus-button {
     top: auto;
     bottom: 20px;
-    left: auto;
-    right: 20px;
-    transform: none;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }
 
