@@ -1,30 +1,29 @@
-# Lexy: AI-Powered Reading Companion 🚀
+# Lexy: AI Reading Companion for Dyslexic Students
+# Slush'D AI Hackathon 2025
 
-## 🚀 Live Demo
-[Try Lexy](https://wonderful-island-08b663303.4.azurestaticapps.net/en)
+## Live Demo
+**[Experience Lexy Now!](https://wonderful-island-08b663303.4.azurestaticapps.net/en)**
 
 ## Demo Video
-[Watch Demo](https://some-link-to-demo-video)
+[Watch the Demo Video](#)
 
-## 🌟 Overview
-Lexy is AI-powered reading assistant that transforms complex text into accessible, engaging content. Built during Ai for good hackathon, it leverages cutting-edge AI to provide an innovative reading experience.
+## Overview
+Lexy is an innovative AI-powered reading companion crafted specifically to support dyslexic students. By leveraging advanced artificial intelligence alongside additional tailored features, Lexy transforms dense, challenging text into accessible, engaging content. This tool not only simplifies reading but also enriches the overall learning experience through interactive strategies such as real-time document conversation and document remixing.
 
-## ✨ Features
-- **Bionic Reading**: Enhanced reading speed with smart text highlighting
-- **AI Document Chat**: Talk to your documents using advanced LLMs
-- **Mood-Matched Music**: Generate ambient music that matches text emotions
-- **Smart Agents**:
-  - Weekly progress reports
-  - Study schedule optimization
-  - Vocabulary building
-  - Content simplification
-  - Reading pace optimization
+## Features
+- Comprehensive reading assessment with personalized text modifications
+- AI-driven document voice chat leveraging large language models
+- Enhanced reading support including a Focus Mode inspired by Bionic Reading for accelerated comprehension
+- Future enhancements: Smart Agents for detailed progress reports, study guidance, and pace optimization
 
-## 🛠️ Tech Stack
-- Frontend: Vue.js
-- Backend: FastAPI
-- AI/ML: LangChain, Crew.ai, 
-- Music Generation: Suno.ai
-- Database: Pinecone
+## Tech Stack
+- Frontend: Vue, Nuxt
+- Backend: FastAPI, Langchain
+- AI: OpenAI, groq
 - Cloud: Azure
 
+## Team Members
+- Filmon Nezif
+- Eden Yoseph
+- Kalkidan Getnet
+- Zarak Khan
