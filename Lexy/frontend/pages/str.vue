@@ -565,7 +565,6 @@
   </div>
 </template>
 
-
 <script setup>
 import axios from 'axios'
 import { BookOpenIcon, MegaphoneIcon } from '@heroicons/vue/24/outline'
@@ -790,8 +789,6 @@ const stopRecording = () => {
     isChunkComplete.value = true
   })
 }
-
-
 
 const initializeReading = (text) => {
   splitTextIntoChunks(text)
@@ -1189,7 +1186,6 @@ const remixText = async () => {
     showRemixOverlay.value = false
   }
 }
-
 
 const showRemixOverlay = ref(false)
 const remixMessage = ref('Remixing your document')
