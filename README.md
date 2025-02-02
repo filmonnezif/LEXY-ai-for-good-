@@ -24,7 +24,6 @@ Lexy is AI-powered reading assistant that transforms complex text into accessibl
 - Frontend: Vue.js
 - Backend: FastAPI
 - AI/ML: LangChain, Crew.ai, 
-- Music Generation: Suno.ai
 - Database: Pinecone
 - Cloud: Azure
 
