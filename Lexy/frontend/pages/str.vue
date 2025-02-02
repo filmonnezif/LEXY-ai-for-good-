@@ -548,9 +548,6 @@
       </div>
       <!-- Document Analytics Section -->
       <div class="mb-6 mt-6">
-          <p class="mb-2 text-sm text-gray-600 dark:text-gray-300">
-            Edit and customize your document then download as pdf
-          </p>
           <div class="flex justify-start">
             <button 
               @click="downloadPDF" 
@@ -559,6 +556,9 @@
               Download
             </button>
           </div>
+          <p class="mb-2 text-sm text-gray-600 dark:text-gray-300">
+            Edit and customize your document then download as pdf
+          </p>
       </div>
       <Separator class="my-2" />
     </div>
